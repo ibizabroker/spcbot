@@ -53,6 +53,15 @@ pip install os
 pip install requests
 pip install dotenv
 ```
+You need to create a project in the <a href = "https://console.cloud.google.com/">Google's Developers Console</a>.
+
+After creating the project go to the marketplace and install the following apis:
+- <a href = "https://console.developers.google.com/apis/library/sheets.googleapis.com/">Google Sheets API</a>
+- <a href = "https://console.developers.google.com/apis/library/drive.googleapis.com/">Google Drive API</a>
+
+To access the google spreadsheet you want to work with you will have to create a <a href = "https://console.cloud.google.com/iam-admin/serviceaccounts">Google Service Account</a>. Give editor access to this account in the spreadsheet you are working on. Download the service account API key in JSON format and upload it in your working directory.
+
+To make your own bot go to <a href = "https://discord.com/developers/applications">Discord's Developers Portal</a> and create an application. Go to OAuth2 and select bot then enable all the text permissions, you will get a link and this will be the invitation link for your bot. Copy the token for your bot and create a .env file in the working directory. In the .env file type TOKEN=yourcopiedtoken.
 
 # Run Command
 ```
