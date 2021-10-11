@@ -150,7 +150,6 @@ async def hello(ctx):
 
 def predicate(message, l, r):
     def check(reaction, user):
-
         if reaction.message.id != message.id or user == discord_client.user:
             return False
         if l and reaction.emoji == "◀":
@@ -158,7 +157,6 @@ def predicate(message, l, r):
         if r and reaction.emoji == "▶":
             return True
         return False
-
     return check
 
 @discord_client.command()
@@ -192,17 +190,64 @@ async def backlog(ctx):
     # await ctx.send(embed = embed)
     # await ctx.send(list_usn_backlog)
     
-    composite_list = [list_usn_backlog[x:x + 20] for x in range(0, len(list_usn_backlog), 20)]
+    combined_list_backlog = map(lambda x: x[0]+ ' - ' + x[1], zip(list_usn_backlog, list_name_backlog))
+    combined_list_backlog = list(combined_list_backlog)
+    composite_list = [combined_list_backlog[x:x + 20] for x in range(0, len(combined_list_backlog), 20)]
     pages = []
+    i = 0
+
     for elements in composite_list:
         string = ""
         for element in elements:
             string += element + "\n"
         embed = discord.Embed(
-            title = "Backlog students",
+            title = "Students with backlog",
             colour = discord.Colour.red()
         )
-        embed.add_field(name = "USNs", value = string)
+        embed.add_field(name = f"Students list {i+1} - {i + len(elements)} out of {len(combined_list_backlog)}", value = string)
+        i += len(elements)
+        pages.append(embed)
+
+    page = 0
+    left = "◀"
+    right = "▶"
+    while True:
+        msg = await ctx.send(embed = pages[(page)])
+        l = page != 0
+        r = page != len(pages) - 1
+        if l:
+            await msg.add_reaction(left)
+
+        if r:
+            await msg.add_reaction(right)
+
+        react = await discord_client.wait_for('reaction_add', check=predicate(msg, l, r))
+        
+        if str(react[0]) == left:
+            page -= 1
+        elif str(react[0]) == right:
+            page += 1
+
+        await msg.delete()
+    
+@discord_client.command()
+async def opendream(ctx):
+    combined_list_backlog = map(lambda x: x[0]+ ' - ' + x[1], zip(list_open_dream, list_name_open_dream))
+    combined_list_backlog = list(combined_list_backlog)
+    composite_list = [combined_list_backlog[x:x + 20] for x in range(0, len(combined_list_backlog), 20)]
+    pages = []
+    i = 0
+
+    for elements in composite_list:
+        string = ""
+        for element in elements:
+            string += element + "\n"
+        embed = discord.Embed(
+            title = "Students placed in open dream companies",
+            colour = discord.Colour.green()
+        )
+        embed.add_field(name = f"Students list {i+1} - {i + len(elements)} out of {len(combined_list_backlog)}", value = string)
+        i += len(elements)
         pages.append(embed)
 
     page = 0
@@ -228,87 +273,133 @@ async def backlog(ctx):
         await msg.delete()
 
 @discord_client.command()
-async def opendream(ctx):
-    # embed = discord.Embed(
-    #     title = "Students placed in Open Dream companies",
-    #     description = '',
-    #     colour = discord.Colour.green()
-    # )
-
-    # for i in range (len(list_open_dream)):
-    #     embed.add_field(
-    #         name = '\u200b',
-    #         value = '{} - {}'.format(list_open_dream[i], list_name_open_dream[i]),
-    #         inline = False
-    #     )
-    
-    # embed.set_footer(text = 'count of students: {}'.format(len(list_name_open_dream)))
-    # await ctx.send(embed = embed)
-
-    await ctx.send(list_open_dream)
-
-@discord_client.command()
 async def dream(ctx):
-    # embed = discord.Embed(
-    #     title = "Students placed in Dream companies",
-    #     description = '',
-    #     colour = discord.Colour.purple()
-    # )
+    combined_list_backlog = map(lambda x: x[0]+ ' - ' + x[1], zip(list_dream, list_name_dream))
+    combined_list_backlog = list(combined_list_backlog)
+    composite_list = [combined_list_backlog[x:x + 20] for x in range(0, len(combined_list_backlog), 20)]
+    pages = []
+    i = 0
 
-    # for i in range (len(list_dream)):
-    #     embed.add_field(
-    #         name = '\u200b',
-    #         value = '{} - {}'.format(list_dream[i], list_name_dream[i]),
-    #         inline = False
-    #     )
-    
-    # embed.set_footer(text = 'count of students: {}'.format(len(list_name_dream)))
-    # await ctx.send(embed = embed)
+    for elements in composite_list:
+        string = ""
+        for element in elements:
+            string += element + "\n"
+        embed = discord.Embed(
+            title = "Students placed in dream companies",
+            colour = discord.Colour.purple()
+        )
+        embed.add_field(name = f"Students list {i+1} - {i + len(elements)} out of {len(combined_list_backlog)}", value = string)
+        i += len(elements)
+        pages.append(embed)
 
-    await ctx.send(list_dream)
+    page = 0
+    left = "◀"
+    right = "▶"
+    while True:
+        msg = await ctx.send(embed = pages[(page)])
+        l = page != 0
+        r = page != len(pages) - 1
+        if l:
+            await msg.add_reaction(left)
+
+        if r:
+            await msg.add_reaction(right)
+
+        react = await discord_client.wait_for('reaction_add', check=predicate(msg, l, r))
+        
+        if str(react[0]) == left:
+            page -= 1
+        elif str(react[0]) == right:
+            page += 1
+
+        await msg.delete()
    
 @discord_client.command() 
 async def unplaced(ctx):
-    # embed = discord.Embed(
-    #     title = "Unplaced students",
-    #     description = '',
-    #     colour = discord.Colour.red()
-    # )
+    combined_list_backlog = map(lambda x: x[0]+ ' - ' + x[1], zip(list_unplaced, list_name_unplaced))
+    combined_list_backlog = list(combined_list_backlog)
+    composite_list = [combined_list_backlog[x:x + 20] for x in range(0, len(combined_list_backlog), 20)]
+    pages = []
+    i = 0
 
-    # for i in range (len(list_unplaced)):
-    #     embed.add_field(
-    #         name = '\u200b',
-    #         value = '{} - {}'.format(list_unplaced[i], list_name_unplaced[i]),
-    #         inline = False
-    #     )
-    
-    # embed.set_footer(text = 'count of students: {}'.format(len(list_name_unplaced)))
-    # await ctx.send(embed = embed)
+    for elements in composite_list:
+        string = ""
+        for element in elements:
+            string += element + "\n"
+        embed = discord.Embed(
+            title = "Unplaced Students",
+            colour = discord.Colour.red()
+        )
+        embed.add_field(name = f"Students list {i+1} - {i + len(elements)} out of {len(combined_list_backlog)}", value = string)
+        i += len(elements)
+        pages.append(embed)
 
-    await ctx.send(list_unplaced)
+    page = 0
+    left = "◀"
+    right = "▶"
+    while True:
+        msg = await ctx.send(embed = pages[(page)])
+        l = page != 0
+        r = page != len(pages) - 1
+        if l:
+            await msg.add_reaction(left)
+
+        if r:
+            await msg.add_reaction(right)
+
+        react = await discord_client.wait_for('reaction_add', check=predicate(msg, l, r))
+        
+        if str(react[0]) == left:
+            page -= 1
+        elif str(react[0]) == right:
+            page += 1
+
+        await msg.delete()
 
 @discord_client.command()
 async def placed(ctx):
-    # list_placed_usn = list_open_dream + list_dream
-    # list_name_placed = list_name_open_dream + list_name_dream
+    list_placed_usn = list_open_dream + list_dream
+    list_name_placed = list_name_open_dream + list_name_dream
 
-    # embed = discord.Embed(
-    #     title = "All placed students",
-    #     description = '',
-    #     colour = discord.Colour.blue()
-    # )
+    combined_list_backlog = map(lambda x: x[0]+ ' - ' + x[1], zip(list_placed_usn, list_name_placed))
+    combined_list_backlog = list(combined_list_backlog)
+    composite_list = [combined_list_backlog[x:x + 20] for x in range(0, len(combined_list_backlog), 20)]
+    pages = []
+    i = 0
 
-    # for i in range (len(list_placed_usn)):
-    #     embed.add_field(
-    #         name = '\u200b',
-    #         value = '{} - {}'.format(list_placed_usn[i], list_name_placed[i]),
-    #         inline = False
-    #     )
-    
-    # embed.set_footer(text = 'count of students: {}'.format(len(list_name_placed)))
-    # await ctx.send(embed = embed)
+    for elements in composite_list:
+        string = ""
+        for element in elements:
+            string += element + "\n"
+        embed = discord.Embed(
+            title = "Placed Students",
+            colour = discord.Colour.blue()
+        )
+        embed.add_field(name = f"Students list {i+1} - {i + len(elements)} out of {len(combined_list_backlog)}", value = string)
+        i += len(elements)
+        pages.append(embed)
 
-    await ctx.send('Open Dream: {} \n\n Dream: {}'.format(list_open_dream, list_dream))
+    page = 0
+    left = "◀"
+    right = "▶"
+    while True:
+        msg = await ctx.send(embed = pages[(page)])
+        l = page != 0
+        r = page != len(pages) - 1
+        if l:
+            await msg.add_reaction(left)
+
+        if r:
+            await msg.add_reaction(right)
+
+        react = await discord_client.wait_for('reaction_add', check=predicate(msg, l, r))
+        
+        if str(react[0]) == left:
+            page -= 1
+        elif str(react[0]) == right:
+            page += 1
+
+        await msg.delete()
 
 @discord_client.command()
 async def verify(ctx):
