@@ -36,7 +36,7 @@ SPC BOT is a discord bot I made to automate verification process for the campus 
 
 It's main job is to use the data present in google spreadsheet and verify it with the data of responses from a downloaded .xlsx file.
 
-To invite the bot to your server use this <a href = "https://discord.com/api/oauth2/authorize?client_id=891279485519937557&permissions=534992387152&scope=bot">Invitation Link</a>.
+<!-- To invite the bot to your server use this <a href = "https://discord.com/api/oauth2/authorize?client_id=891279485519937557&permissions=534992387152&scope=bot">Invitation Link</a>. -->
 
 The prefix for this bot is **-**. Use command **-help** to explore different commands.
 
